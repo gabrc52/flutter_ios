@@ -1,9 +1,13 @@
 #https://medium.com/@yegorj/building-flutter-apks-and-ipas-on-travis-98d84d8e9b4
 os: osx
 language: generic
-osx_image: xcode8.3
+#osx_image: xcode9.4
 before_script:
   - brew update
+  #https://github.com/flutter/flutter/issues/22595
+  - brew install --HEAD usbmuxd
+  - brew unlink usbmuxd
+  - brew link usbmuxd
   - brew install --HEAD libimobiledevice
   - brew install ideviceinstaller
   - brew install ios-deploy
