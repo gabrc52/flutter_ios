@@ -1,0 +1,17 @@
+#https://medium.com/@yegorj/building-flutter-apks-and-ipas-on-travis-98d84d8e9b4
+os: osx
+language: generic
+osx_image: xcode8.3
+before_script:
+  - pip install six
+  - brew update
+  - brew install --HEAD libimobiledevice
+  - brew install ideviceinstaller
+  - brew install ios-deploy
+  - git clone https://github.com/flutter/flutter.git -b beta --depth 1
+script:
+  - ./flutter/bin/flutter -v build ios --no-codesign
+
+cache:
+  directories:
+    - $HOME/.pub-cache
