@@ -1,20 +1,32 @@
-#https://medium.com/@yegorj/building-flutter-apks-and-ipas-on-travis-98d84d8e9b4
 os: osx
 language: generic
-#osx_image: xcode9.4
 before_script:
-  - brew update
-  #https://github.com/flutter/flutter/issues/22595
-  - brew install --HEAD usbmuxd
-  - brew unlink usbmuxd
-  - brew link usbmuxd
-  - brew install --HEAD libimobiledevice
-  - brew install ideviceinstaller
-  - brew install ios-deploy
-  - git clone https://github.com/flutter/flutter.git -b beta --depth 1
+- brew update
+- brew install --HEAD usbmuxd
+- brew unlink usbmuxd
+- brew link usbmuxd
+- brew install --HEAD libimobiledevice
+- brew install ideviceinstaller
+- brew install ios-deploy
+- git clone https://github.com/flutter/flutter.git -b beta --depth 1
 script:
-  - ./flutter/bin/flutter -v build ios --no-codesign
-
+- "./flutter/bin/flutter -v build ios --no-codesign"
 cache:
   directories:
-    - $HOME/.pub-cache
+  - "$HOME/.pub-cache"
+before_deploy:
+  - pushd build/ios/iphoneos
+  - mkdir Payload
+  - cd Payload
+  - ln -s ../Runner.app
+  - cd ..
+  - zip -r app.ipa Payload
+  - popd  
+deploy:
+  provider: releases
+  api_key:
+    secure: EZbiP+6qNshcYyysyWUdPjItNHmmO77mpq/urUnbBTAtOMo4G7mJd2OxEIErRRqxVTa3omfEqu4jFqC0tfF4MaRnRAt41bUxyQWcO4ECNN4VoKul95ibv+I5ydWu/V1zxAi+QQ5vUpTYCy06+4XqbFk6i0UT0Dn3CbnGlQr42ASgQgYAYQ52C7L9Z8I0adyt+jYe/dwKzqdv1vKHS1JRhKyE2W4CWftcPFP/Q136+xkqxoQhVVPLkidyUCxPMNTBibweaa5jK12Tssmc+J4gzC9TofzviZZ7M9pk6vWEtPdrREHEzKr4rmEXOKHuYepVL7/zxfHf6U+SFu0YYXO5PI1Th9C+/GJwzijLW2ELcEI7/1+vcp+LMPtdBqDIx5svXOq9c3ttstFOc6YPYtBF3tbise9FvGum997UOuCX+E4FcN+bMAmLOQubQ1di5pG3lbbF6ncWDa//LQjEgz7gHkVzIM4An0XeUuEczZEIqi4sOWhfyFHm1WQeY4gzKgTD1Z1L1YkE3HsYgUxjWATVNUVBajPTvE6umbYO4+8gl1MfN/8Tl9AfTpoqUxP9k1KzR2HEzi0YLkNtASQsI3ZOxEYHXT/aDYe5neowKQUUiBZ5xOevyUEk0c4Lot4jZccaR6XqShTyDi4X/gzql4Sb/cnzXh3JJbWCsMukT0mpWps=
+  file: build/ios/iphoneos/app.ipa
+  skip_cleanup: true
+  on:
+    repo: gabrc52/posse_gallery
