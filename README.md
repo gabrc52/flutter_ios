@@ -1,6 +1,8 @@
-# posse_gallery
+# flutter_ios
 
-A new flutter project.
+Demonstrates debugging an app on iOS from Linux as a proof-of-concept.
+
+Check out the Medium article (TBD).
 
 ## Getting Started
 
